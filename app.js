@@ -122,7 +122,7 @@ const app = express();
 const port = 8080;
 
 
-const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
+const MONGO_URL = "mongodb://127.0.0.1:27017/wanderLust";
 
 main() .then((res) => {
     console.log("Connected to DB");

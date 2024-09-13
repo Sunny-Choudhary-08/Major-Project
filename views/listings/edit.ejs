@@ -1,4 +1,4 @@
-<% layout("/layouts/boilerplate") %>
+<!-- <% layout("/layouts/boilerplate") %>
 <body>
   <br /><br />
   <div class="row">
@@ -29,6 +29,81 @@
             type="text"
             name="listing[image]"
             value="<%= listing.image %>"
+            class="form-control"
+          />
+        </div>
+
+        <div class="row mt-3">
+          <div class="mb-3 col-md-4">
+            <lable for="price" class="form-lable">Price</lable>
+            <input
+              type="number"
+              name="listing[price]"
+              value="<%= listing.price %>"
+              class="form-control"
+            />
+          </div>
+
+          <div class="mb-3 col-md-8">
+            <lable for="country" class="form-lable">Country</lable>
+            <input
+              type="text"
+              name="listing[country]"
+              value="<%= listing.country %>"
+              class="form-control"
+            />
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <lable for="location" class="form-lable">Location</lable>
+          <input
+            type="text"
+            name="listing[location]"
+            value="<%= listing.location %>"
+            class="form-control"
+          />
+        </div>
+
+        <br />
+        <button class="btn btn-dark edit-btn mt-3">Edit</button>
+        <br /><br />
+      </form>
+    </div>
+  </div>
+</body> -->
+
+<% layout("/layouts/boilerplate") %>
+<body>
+  <br /><br />
+  <div class="row">
+    <div class="col-8 offset-2">
+      <h3>Edit your listing</h3>
+
+      <form method="POST" action="/listings/<%= listing._id %>?_method=PUT">
+        <div class="mb-3">
+          <input
+            type="text"
+            name="listing[title]"
+            value="<%= listing.title %>"
+            class="form-control"
+          />
+          <lable for="title" class="form-lable">Title</lable>
+        </div>
+
+        <div class="mb-3">
+          <lable for="description" class="form-lable">Description</lable>
+          <textarea name="listing[description]" class="form-control">
+<%= listing.description %></textarea
+          >
+        </div>
+
+        <div class="mb-3">
+          <lable for="image" class="form-lable">Image Link</lable>
+          <input
+            type="text"
+            name="listing[image][url]"
+            value="<%= listing.image.url %>"
             class="form-control"
           />
         </div>
