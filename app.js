@@ -6,6 +6,7 @@ const Listing = require("./models/listing.js"); // Adjust this path based on you
 const path = require("path");
 const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
+const wrapAsync = require("./utils/wrapAsync.js");
 
 
 
@@ -33,38 +34,37 @@ app.use(methodOverride("_method"));
 app.engine('ejs' , ejsMate);
 app.use(express.static(path.join(__dirname , "/public")));
 
-// index route which wil return all listings 
 
-app.get("/listings" , async (req,res) => {
- const allListings =  await Listing.find({});
- res.render("listings/index.ejs" , {allListings});
- //console.log(allListings);
+
+
+//Index Route
+app.get("/listings", async (req, res) => {
+  const allListings = await Listing.find({});
+  res.render("listings/index.ejs", { allListings });
+});
+
+//New Route
+app.get("/listings/new", (req, res) => {
+  res.render("listings/new.ejs");
 });
 
 //show route which will print the individual data of every listing
 
-app.get(("/listings/:id") , async(req ,res) => {
-  let {id} = req.params;
+app.get("/listings/:id" , async(req ,res) => {
+  let { id } = req.params;
   const listing = await Listing.findById(id);
   res.render("listings/show.ejs" , {listing});
 });
 
-// new route -- we will get a form to create new listing;
-
-app.get("/listings/new" , (req,res) => {
-  res.render("listings/new.ejs");
-});
-
-
 //create route to add new listing 
 
-app.post("/listings" , async(req,res) => {
+app.post("/listings" , wrapAsync(async(req,res ,next) => {
 
- const newListing =  new Listing(req.body.listing);
-  await newListing.save();
-  res.redirect("/listings");
+  const newListing =  new Listing(req.body.listing);
+    await newListing.save();
+    res.redirect("/listings");
 
-});
+}));
 
 //edit route 
 
@@ -91,6 +91,11 @@ app.delete("/listings/:id" , async (req,res) => {
   res.redirect("/listings");
 });
 
+//middle ware for handling the error which will come from the database..
+
+app.use((err,req,res,next) => {
+  res.send("Something went wrong!");
+}); 
 
 
 
