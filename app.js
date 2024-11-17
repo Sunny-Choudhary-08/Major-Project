@@ -9,6 +9,7 @@ const ejsMate = require("ejs-mate");
 const wrapAsync = require("./utils/wrapAsync.js");
 const ExpressError = require("./utils/ExpressError.js");
 const {listingSchema} = require("./schema.js");
+const Review = require("./models/review.js");
 
 
 
@@ -78,7 +79,6 @@ app.post("/listings" ,validateListing, wrapAsync(async(req,res ,next) => {
   const newListing =  new Listing(req.body.listing);
     await newListing.save();
     res.redirect("/listings");
-
 }));
 
 //edit route 
@@ -106,6 +106,21 @@ app.delete("/listings/:id" , wrapAsync(async (req,res) => {
   res.redirect("/listings");
 }));
 
+//reviews route
+
+app.post("/listings/:id/reviews" , async (req,res) => {
+  let listing =  await Listing.findById(req.params.id);
+  let newReview = new Review(req.body.review);
+
+  listing.reviews.push(newReview);
+
+  await newReview.save();
+  await listing.save();
+  
+  res.redirect(`/listings/${listing._id}`);
+
+});
+
 
 // for wrong req -- page not found
 
@@ -128,6 +143,8 @@ app.use((err,req,res,next) => {
 app.get("/", (req, res) => {
   res.send("working");
 });
+
+
 
 // Start the server
 app.listen(port, () => {
