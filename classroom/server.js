@@ -1,19 +1,23 @@
 const express = require("express");
-const users = require("./routes/user.js");
 const app = express();
-const posts = require("./routes/post.js")
+const cookieParser = require("cookie-parser");
 
+app.use(cookieParser());
 
-//users route 
-// get route
+//sending cookies
 
-app.get("/", (req, res) => {
-  res.send("Hi i am root");
+app.get("/getCookies", (req, res) => {
+  res.cookie("Greet", "Hello");
+  res.cookie("MadeIn", "Namaste");
+  res.send("Send you some Cookies!");
 });
 
-app.use("/users" , users); //jitne bhi path aaye means jo jo path haamare / se start hote hai wo sabhi users ko use kre ....
+//parse cookies
 
-app.use("/posts" , posts);
+app.get("/", (req, res) => {
+  console.log(req.cookies);
+  res.send("Hi i am root");
+});
 
 app.listen(3000, () => {
   console.log("server is listening to 3000");
